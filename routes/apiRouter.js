@@ -1,31 +1,31 @@
 var express = require('express');
 var router = express.Router();
 
-const todoItems = [
+let todoItems = [
   {
     id: 1,
     title: 'First item',
-    body: 'Content of first item',
+    content: 'Content of first item',
   },
   {
     id: 2,
     title: 'second item',
-    body: 'Content of second item',
+    content: 'Content of second item',
   },
   {
     id: 3,
     title: 'third item',
-    body: 'Content of third item',
+    content: 'Content of third item',
   },
 ];
 
 /* GET all todo items  */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.json(todoItems);
 });
 
 /* GET one todo item. */
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function (req, res, next) {
   const itemId = parseInt(req.params.id);
   const item = todoItems.find((item) => item.id === itemId);
   if (!item) {
@@ -38,7 +38,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* POST create new todo item. */
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
   let highestId = 0;
   todoItems.forEach((item) => {
     if (item.id > highestId) highestId = parseInt(item.id);
@@ -59,6 +59,27 @@ router.post('/', function(req, res, next) {
 });
 
 /* PATCH update one todo item. */
+router.patch('/:id', function (req, res, next) {
+  const itemId = parseInt(req.params.id);
+  let item = todoItems.find((item) => item.id === itemId);
+  if (!item) {
+    res.statusCode = 404;
+    res.json('No item found by that id!');
+  } else {
+    if (req.body.title) {
+      item.title = req.body.title
+    }
+    if (req.body.content) {
+      item.content = req.body.content
+    }
+    const filteredItems = todoItems.filter((item) => item.id !== itemId);
+    todoItems = [...filteredItems, item];
+    todoItems = todoItems.sort((first, second) => first.id - second.id);
+    res.statusCode = 200;
+    res.json(item);
+  }
+});
+
 /* DELTE delete one todo item. */
 
 module.exports = router;

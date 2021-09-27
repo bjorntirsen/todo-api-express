@@ -38,6 +38,26 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* POST create new todo item. */
+router.post('/', function(req, res, next) {
+  let highestId = 0;
+  todoItems.forEach((item) => {
+    if (item.id > highestId) highestId = parseInt(item.id);
+  });
+
+  const newItem = {
+    id: highestId + 1,
+    title: req.body.title,
+    content: req.body.content,
+  };
+
+  console.log(`Created new item: `);
+  console.log(newItem);
+
+  todoItems.push(newItem);
+  res.statusCode = 201;
+  res.json(newItem);
+});
+
 /* PATCH update one todo item. */
 /* DELTE delete one todo item. */
 

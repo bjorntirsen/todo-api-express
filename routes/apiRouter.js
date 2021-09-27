@@ -81,5 +81,11 @@ router.patch('/:id', function (req, res, next) {
 });
 
 /* DELTE delete one todo item. */
+router.delete('/:id', (req, res, next) => {
+  const itemId = parseInt(req.params.id);
+  todoItems = todoItems.filter((item) => item.id !== itemId);
+  res.statusCode = 204;
+  res.end();
+});
 
 module.exports = router;
